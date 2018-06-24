@@ -55,7 +55,7 @@ print(Y_pred)
 
 # Visualizing the SVR Regression
 plt.scatter(X, y, color = 'red')
-plt.plot(X_grid, regressor.predict(X_grid),color = 'blue')
+plt.plot(X, regressor.predict(X),color = 'blue')
 # plt.xticks(sc_X.inverse_transform(X))
 # plt.yticks(sc_y.inverse_transform(y))
 plt.title('Truth or Bluff(SVR Regression)')
