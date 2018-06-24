@@ -1,0 +1,79 @@
+# we will use same data to build another non linear data model
+# we are building non linear model so we are removing all linear and polynomial model and building non linear model
+# Non linear Regression Model is not based on Linear or Polynomial Regression Model
+
+
+###############SVR Regression Model###########################
+
+import numpy as np
+import pandas as pd
+from sklearn import datasets
+import matplotlib.pyplot as plt
+
+position_salaries = { 'Position' : [	'Business Analyst','Junior Consultant','Senior Consultant','Manager','Country Manager',
+'Region Manager','Partner','Senior Partner','C-level','CEO'],
+'Salary' : [45000,50000,60000,80000,110000,150000,200000,300000,500000,1000000],
+'Level' : [1,2,3,4,5,6,7,8,9,10]
+}
+
+data = pd.DataFrame(position_salaries)
+X = data.iloc[:,0:1].values# From This X will consider as matrix
+y = data.iloc[:,2].values
+
+# Here we do not need to split our data into training set or test 
+# Splitting the dataset into the Training set and Test set
+"""from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)"""
+
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X = sc_X.fit_transform(X)
+sc_y = StandardScaler()
+y = sc_y.fit_transform(y)
+
+# set because we do not have enough amount of data here
+
+
+# Fitting the SVR Regression Model to the datasets
+# Create your Regressor
+from sklearn.svm import SVR
+regressor = SVR(kernel = 'rbf') # in this function we have lots of kernel because our problem is non linear so we will either 'rbf' or 'poly'.
+# for SVR kernel we will choose 'rbf' kernel which is default kernel that is why we will not specify it in SVR() function.
+regressor.fit(X, y)
+
+# our SVR Model will not scale our data automatically
+# all the models we have seen before was performing feature scalling automatically but here we need to perform it explitly.
+
+
+#Predicting A result
+Y_pred = regressor.predict(6.5)
+# This will not give desire output because previously we perform feature scalling to get the output So we also need to perform feature Scalling in predicting data.
+Y_pred = sc_y.inverse_transform(regressor.predict(sc_X.transform(np.array([[6.5]]))))
+print(Y_pred)
+# 1. Here first [] will give us a vector notation but np.array receive matrix as input so we add one other [] to convart it to matrix.
+
+# Visualizing the SVR Regression
+plt.scatter(X, y, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid),color = 'blue')
+# plt.xticks(sc_X.inverse_transform(X))
+# plt.yticks(sc_y.inverse_transform(y))
+plt.title('Truth or Bluff(SVR Regression)')
+plt.xlabel('Position Level')
+plt.ylabel('Salary')
+plt.show()
+
+# SVR Model left the last data because it is considering is as a outlier
+# But it is ok beacuse we need to predict the salary of level 6.5 
+# So our graph will work for that level
+
+# Visualizing the SVR Regression for Higher resolution and smoother curve
+X_grid  = np.arange(min(X), max(X), 0.1)
+X_grid = X_grid.reshape(len(X_grid), 1)
+print(X_grid)
+plt.scatter(X,y, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid),color = 'blue')
+plt.title('Truth or Bluff(SVR Regression)')
+plt.xlabel('Positiewon Level')
+plt.ylabel('Salary')
+plt.show()
