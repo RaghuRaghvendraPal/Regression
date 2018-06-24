@@ -1,0 +1,87 @@
+##################################Random Forest Model###########################
+''' I think This is best model out of all model i have seen'''
+'''Note : Random Forest is version of ensemble learning'''
+'''ensemble learning -: ensemble Learning is when we take Multiple algorithm and same algorithm multiple times and put all of them together to create much powerful algo than original algo'''
+
+''' to get output we take average of all the predicted output getting from all decision trees'''
+
+''' mean can take outlier also but
+    median leave outlier'''
+    
+''' decision tree and random forest model require higher solution graph to observe thr result'''
+
+# we will use same data to build another non linear data model
+# we are building non linear model so we are removing all linear and polynomial model and building non linear model
+
+import numpy as np
+import pandas as pd
+from sklearn import datasets
+import matplotlib.pyplot as plt
+
+position_salaries = { 'Position' : [	'Business Analyst','Junior Consultant','Senior Consultant','Manager','Country Manager',
+'Region Manager','Partner','Senior Partner','C-level','CEO'],
+'Salary' : [45000,50000,60000,80000,110000,150000,200000,300000,500000,1000000],
+'Level' : [1,2,3,4,5,6,7,8,9,10]
+}
+
+data = pd.DataFrame(position_salaries)
+X = data.iloc[:,0:1].values# From This X will consider as matrix
+y = data.iloc[:,2].values
+
+# Here we do not need to split our data into training set or test 
+# Splitting the dataset into the Training set and Test set
+"""from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)"""
+
+# Feature Scaling
+# from sklearn.preprocessing import StandardScaler
+# sc_X = StandardScaler()
+# X = sc_X.fit_transform(X)
+# sc_y = StandardScaler()
+# y = sc_y.fit_transform(y)
+
+# set because we do not have enough amount of data here
+# Fitting the Decision Tree Regression Model to the datasets
+# Create your Regressor
+from sklearn.ensemble import RandomForestRegressor
+# regressor = RandomForestRegressor(n_estimators = 10,random_state = 0)
+# regressor = RandomForestRegressor(n_estimators = 100,random_state = 0)
+regressor = RandomForestRegressor(n_estimators = 300,random_state = 0)
+# n_estimators means no of trees u want to create through this data
+regressor.fit(X, y)
+
+#Predicting A result
+Y_pred = regressor.predict(6.5)
+
+# Visualizing the Decision Tree Regression 
+# This will not work in Decision Tree Model we need to work with High resolution Graph
+
+
+# plt.scatter(X, y, color = 'red')
+# plt.plot(X, regressor.predict(X),color = 'blue')
+# # plt.xticks(sc_X.inverse_transform(X))
+# # plt.yticks(sc_y.inverse_transform(y))
+# plt.title('Truth or Bluff(Decision Tree Regression)')
+# plt.xlabel('Position Level')
+# plt.ylabel('Salary')
+# plt.show()
+
+
+# Visualizing the Decision Tree Regression for Higher resolution and smoother curve
+# X_grid  = np.arange(min(X), max(X), 0.1)
+X_grid  = np.arange(min(X), max(X), 0.01)
+X_grid = X_grid.reshape(len(X_grid), 1)
+print(X_grid)
+plt.scatter(X,y, color = 'red')
+plt.plot(X_grid, regressor.predict(X_grid),color = 'blue')
+plt.title('Truth or Bluff(Decision Tree Regression)')
+plt.xlabel('Positiewon Level')
+plt.ylabel('Salary')
+plt.show()
+
+'''Here we get more step as compare to one decision tree that we discuss before because we have lots of decision tree here
+
+Random forest take average from multiple values from each of decision tree for a particular interval that is why it is giving more accurate result as compare to decision tree'''
+
+'''it does not mean that we will get lots of steps if we add multiple decision tree it depends on value of average on that point
+ if we get other value than it will split at that value'''
